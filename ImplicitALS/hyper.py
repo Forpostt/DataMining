@@ -6,3 +6,5 @@ class Hyper(object):
     train = '{}/data/train.txt'.format(base_path)
     test = '{}/data/test.txt'.format(base_path)
     submission = '{}/data/sub.txt'.format(base_path)
+    user_based = '{}/data/user_based.txt'.format(base_path)
+    item_based = '{}/data/item_based.txt'.format(base_path)

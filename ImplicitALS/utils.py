@@ -31,3 +31,8 @@ def create_submission(predicts):
                 sub.write('{0},{1:.1f}\n'.format(i + 1, predicts[int(user_id) - 1, int(movie_id) - 1]))
 
 
+def save_results(mm, path):
+    with open(path, 'w') as fd:
+        for i in range(mm.shape[0]):
+            for j in range(mm.shape[1]):
+                fd.write('{}\t{}\t{}\n'.format(i + 1, j + 1, mm[i, j]))
