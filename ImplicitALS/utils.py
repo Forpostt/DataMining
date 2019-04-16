@@ -4,8 +4,8 @@ import numpy as np
 from hyper import Hyper
 
 
-def load():
-    with open(Hyper.train) as fd:
+def load(path):
+    with open(path) as fd:
         data = fd.readlines()
 
     users, movies = set(), set()
@@ -17,7 +17,7 @@ def load():
     train = np.zeros(shape=(max(users), max(movies)), dtype=np.uint8)
     for record in data:
         user_id, movie_id, score = record.strip().split('\t')
-        train[int(user_id) - 1, int(movie_id) - 1] = int(score)
+        train[int(user_id) - 1, int(movie_id) - 1] = float(score)
 
     return train
 

@@ -3,6 +3,7 @@
 import numpy as np
 import tqdm
 from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.linear_model import Ridge
 
 from utils import *
 
@@ -61,8 +62,36 @@ def item_based(train):
     return predicts
 
 
+def linear(train):
+    samples, y = [], []
+    for i in range(train.shape[0]):
+        for j in range(train.shape[1]):
+            if train[i, j] > 0:
+                sample = np.zeros(shape=(train.shape[0] + train.shape[1],))
+                sample[i] = 1
+                sample[train.shape[0] + j] = 1
+
+                samples.append(sample)
+                y.append(train[i, j])
+
+    train_x, train_y = np.array(samples), np.array(y)
+    model = Ridge(alpha=3)
+    model.fit(train_x, train_y)
+
+    for i in tqdm.tqdm(range(train.shape[0])):
+        for j in range(train.shape[1]):
+            if train[i, j] == 0:
+                sample = np.zeros(shape=(train.shape[0] + train.shape[1],))
+                sample[i] = 1
+                sample[train.shape[0] + j] = 1
+
+                train[i, j] = model.predict(sample.reshape(1, -1))[0]
+
+    return train
+
+
 if __name__ == '__main__':
-    data = load()
-    pred = item_based(data)
-    save_results(pred, Hyper.item_based)
+    data = load(Hyper.train)
+    pred = linear(data)
+    save_results(pred, Hyper.linear)
     create_submission(pred)

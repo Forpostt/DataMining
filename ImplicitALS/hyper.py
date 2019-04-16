@@ -8,3 +8,4 @@ class Hyper(object):
     submission = '{}/data/sub.txt'.format(base_path)
     user_based = '{}/data/user_based.txt'.format(base_path)
     item_based = '{}/data/item_based.txt'.format(base_path)
+    linear = '{}/data/linear.txt'.format(base_path)
