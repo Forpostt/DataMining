@@ -78,6 +78,7 @@ def linear(train):
     model = Ridge(alpha=3)
     model.fit(train_x, train_y)
 
+    results = train.astype(np.float)
     for i in tqdm.tqdm(range(train.shape[0])):
         for j in range(train.shape[1]):
             if train[i, j] == 0:
@@ -85,9 +86,15 @@ def linear(train):
                 sample[i] = 1
                 sample[train.shape[0] + j] = 1
 
-                train[i, j] = model.predict(sample.reshape(1, -1))[0]
+                results[i, j] = model.predict(sample.reshape(1, -1))[0]
+            else:
+                results[i, j] = train[i, j]
 
-    return train
+    return results
+
+
+def als(train):
+    pass
 
 
 if __name__ == '__main__':
