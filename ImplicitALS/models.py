@@ -93,8 +93,31 @@ def linear(train):
     return results
 
 
-def als(train):
-    pass
+def ials(train, test, init, n_iter=10, n_features=5, lambda_val=8, alpha=25):
+    user_size, item_size = train.shape
+
+    users = np.random.normal(size=(user_size, n_features))
+    items = np.random.normal(size=(item_size, n_features))
+
+    lambda_I = lambda_val * np.eye(n_features)
+    confidence = np.ones(train.shape) + train * alpha
+
+    for it in range(n_iter):
+        for u in range(user_size):
+            A = np.dot(items.T * confidence[u], items) + lambda_I * (train[u] > 0).sum()
+            b = np.dot(items.T * confidence[u], init[u])
+            users[u] = np.linalg.solve(A, b)
+
+        for i in range(item_size):
+            A = np.dot(users.T * confidence[:, i], users) + lambda_I * (train[:, i] > 0).sum()
+            b = np.dot(users.T * confidence[:, i], init[:, i])
+            items[i] = np.linalg.solve(A, b)
+
+        res = np.dot(users, items.T)
+        rmse = np.sqrt(((res * (test > 0) - test) ** 2).sum() / (test > 0).sum())
+        print(rmse)
+
+    return res
 
 
 if __name__ == '__main__':
